@@ -46,13 +46,18 @@ def main() -> None:
     st.markdown(
         """
         <style>
+            :root {
+                color-scheme: dark;
+            }
+
             .stApp {
                 background:
-                    radial-gradient(circle at 16% 10%, rgba(0, 229, 255, 0.14) 0%, rgba(0, 229, 255, 0.00) 28%),
-                    radial-gradient(circle at 84% 16%, rgba(33, 150, 243, 0.11) 0%, rgba(33, 150, 243, 0.00) 26%),
-                    radial-gradient(circle at 33% 82%, rgba(62, 39, 193, 0.10) 0%, rgba(62, 39, 193, 0.00) 30%),
-                    linear-gradient(135deg, #000000 0%, #050505 20%, #0a0e14 50%, #020202 100%);
+                    radial-gradient(circle at 16% 10%, rgba(56, 189, 248, 0.10) 0%, rgba(56, 189, 248, 0.00) 28%),
+                    radial-gradient(circle at 84% 16%, rgba(14, 165, 233, 0.08) 0%, rgba(14, 165, 233, 0.00) 26%),
+                    radial-gradient(circle at 33% 82%, rgba(99, 102, 241, 0.10) 0%, rgba(99, 102, 241, 0.00) 30%),
+                    linear-gradient(135deg, #050816 0%, #070b14 20%, #0b1120 50%, #03050a 100%);
                 background-attachment: fixed;
+                color: rgba(226, 232, 240, 0.94);
             }
 
             .stApp:before {
@@ -61,10 +66,29 @@ def main() -> None:
                 inset: 0;
                 pointer-events: none;
                 background:
-                    linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0 12%, transparent 12% 48%, rgba(255, 255, 255, 0.02) 48% 53%, transparent 53% 100%),
-                    linear-gradient(315deg, rgba(0, 0, 0, 0.42) 0 18%, transparent 18% 42%, rgba(255, 255, 255, 0.02) 42% 46%, transparent 46% 100%);
+                    linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0 12%, transparent 12% 48%, rgba(255, 255, 255, 0.015) 48% 53%, transparent 53% 100%),
+                    linear-gradient(315deg, rgba(0, 0, 0, 0.48) 0 18%, transparent 18% 42%, rgba(255, 255, 255, 0.01) 42% 46%, transparent 46% 100%);
                 opacity: 1;
                 z-index: 0;
+            }
+
+            .main .block-container,
+            div[data-testid="stMarkdownContainer"],
+            div[data-testid="stCaptionContainer"],
+            label {
+                color: rgba(226, 232, 240, 0.94);
+            }
+
+            .stCaption {
+                color: rgba(148, 163, 184, 0.95) !important;
+            }
+
+            div[data-testid="stMetric"] {
+                background: rgba(15, 23, 42, 0.58);
+                border: 1px solid rgba(148, 163, 184, 0.15);
+                border-radius: 18px;
+                padding: 0.75rem 1rem;
+                box-shadow: 0 18px 36px rgba(2, 6, 23, 0.28);
             }
 
             section[data-testid="stSidebar"] {
@@ -72,13 +96,13 @@ def main() -> None:
             }
 
             section[data-testid="stSidebar"] > div {
-                background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+                background: linear-gradient(180deg, rgba(15, 23, 42, 0.92) 0%, rgba(10, 15, 28, 0.92) 100%);
                 backdrop-filter: blur(18px);
                 -webkit-backdrop-filter: blur(18px);
-                border: 1px solid rgba(255, 255, 255, 0.12);
+                border: 1px solid rgba(148, 163, 184, 0.14);
                 border-radius: 24px;
                 margin: 1rem 0.8rem 1rem 1rem;
-                box-shadow: 0 28px 72px rgba(0, 0, 0, 0.45);
+                box-shadow: 0 28px 72px rgba(2, 6, 23, 0.6);
                 overflow: hidden;
             }
 
@@ -88,7 +112,7 @@ def main() -> None:
             }
 
             section[data-testid="stSidebar"] .sidebar-title {
-                color: rgba(255, 255, 255, 0.96);
+                color: rgba(248, 250, 252, 0.98);
                 font-size: 1.55rem;
                 font-weight: 800;
                 letter-spacing: 0.02em;
@@ -97,15 +121,15 @@ def main() -> None:
             }
 
             section[data-testid="stSidebar"] .sidebar-subtitle {
-                color: rgba(255, 255, 255, 0.68);
+                color: rgba(148, 163, 184, 0.96);
                 font-size: 0.92rem;
                 padding: 0 1rem 0.75rem;
                 margin-bottom: 0.25rem;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+                border-bottom: 1px solid rgba(148, 163, 184, 0.16);
             }
 
             section[data-testid="stSidebar"] .sidebar-menu-label {
-                color: rgba(255, 255, 255, 0.9);
+                color: rgba(226, 232, 240, 0.9);
                 font-size: 0.82rem;
                 font-weight: 700;
                 letter-spacing: 0.18em;
@@ -114,10 +138,10 @@ def main() -> None:
             }
 
             section[data-testid="stSidebar"] button {
-                background: rgba(255, 255, 255, 0.08) !important;
-                border: 1px solid rgba(255, 255, 255, 0.12) !important;
+                background: rgba(15, 23, 42, 0.72) !important;
+                border: 1px solid rgba(148, 163, 184, 0.16) !important;
                 border-radius: 16px !important;
-                color: rgba(255, 255, 255, 0.93) !important;
+                color: rgba(248, 250, 252, 0.94) !important;
                 width: 100% !important;
                 justify-content: flex-start !important;
                 gap: 0.42rem !important;
@@ -130,48 +154,48 @@ def main() -> None:
 
             section[data-testid="stSidebar"] button:hover {
                 transform: translateX(2px);
-                background: rgba(255, 255, 255, 0.14) !important;
-                border-color: rgba(255, 255, 255, 0.24) !important;
+                background: rgba(30, 41, 59, 0.96) !important;
+                border-color: rgba(96, 165, 250, 0.28) !important;
             }
 
             section[data-testid="stSidebar"] button[kind="primary"] {
-                background: rgba(255, 255, 255, 0.18) !important;
-                border-color: rgba(255, 255, 255, 0.32) !important;
-                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.18) !important;
+                background: linear-gradient(135deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%) !important;
+                border-color: rgba(96, 165, 250, 0.36) !important;
+                box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.08), 0 10px 28px rgba(2, 6, 23, 0.34) !important;
             }
 
             div[data-testid="stSelectbox"] {
-                background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%);
-                border: 1px solid rgba(255, 255, 255, 0.12);
+                background: linear-gradient(180deg, rgba(15, 23, 42, 0.92) 0%, rgba(10, 15, 28, 0.92) 100%);
+                border: 1px solid rgba(148, 163, 184, 0.16);
                 border-radius: 18px;
                 padding: 0.35rem 0.45rem 0.45rem;
                 backdrop-filter: blur(16px);
                 -webkit-backdrop-filter: blur(16px);
-                box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+                box-shadow: 0 16px 36px rgba(2, 6, 23, 0.32);
                 transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
             }
 
             div[data-testid="stSelectbox"]:hover {
                 transform: translateY(-2px);
-                background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.07) 100%);
-                border-color: rgba(255, 255, 255, 0.22);
-                box-shadow: 0 22px 44px rgba(0, 0, 0, 0.34);
+                background: linear-gradient(180deg, rgba(30, 41, 59, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%);
+                border-color: rgba(96, 165, 250, 0.26);
+                box-shadow: 0 22px 44px rgba(2, 6, 23, 0.38);
             }
 
             div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
                 background: transparent;
                 border: 0;
                 box-shadow: none;
-                color: rgba(255, 255, 255, 0.94);
+                color: rgba(248, 250, 252, 0.96);
             }
 
             div[data-testid="stSelectbox"] svg {
-                fill: rgba(255, 255, 255, 0.82);
+                fill: rgba(226, 232, 240, 0.84);
             }
 
             div[data-testid="stSelectbox"] div[data-baseweb="popover"] {
-                background: rgba(6, 8, 12, 0.98);
-                border: 1px solid rgba(255, 255, 255, 0.08);
+                background: rgba(15, 23, 42, 0.98);
+                border: 1px solid rgba(148, 163, 184, 0.12);
             }
 
             section[data-testid="stSidebar"] button span {
@@ -193,6 +217,16 @@ def main() -> None:
                 background: transparent;
             }
 
+            hr {
+                border-color: rgba(148, 163, 184, 0.18) !important;
+            }
+
+            .stExpander {
+                background: rgba(15, 23, 42, 0.5);
+                border: 1px solid rgba(148, 163, 184, 0.14);
+                border-radius: 16px;
+            }
+
             .phase-selector { margin-bottom: 20px; }
             .phase-selector label { font-weight: 600; font-size: 1.1rem; }
             .phase-highlight { border-left: 6px solid var(--accent); padding-left: 15px; }
@@ -206,7 +240,7 @@ def main() -> None:
 
     col_title, col_selector, col_spacer = st.columns([2, 1.5, 1])
     with col_title:
-        st.title("🧠 BCI Augmentation Pipeline")
+        st.title("BCI Augmentation Pipeline")
         st.caption("Interactive walkthrough of preprocessing, GAN architecture, and classification.")
     with col_selector:
         st.markdown("<div class='sidebar-menu-label' style='padding-left: 0; padding-top: 0;'>Live Evolution View</div>", unsafe_allow_html=True)
@@ -273,7 +307,7 @@ def main() -> None:
         st.markdown("Display the proposed architecture image. The page intentionally shows only the image to keep the architecture focused and large.")
 
         assets_dir = ROOT / "assets"
-        img_path = Path("/Users/shriram/Desktop/architecture.png")
+        img_path = Path("./assets/architecture.png")
 
         if img_path.exists():
             st.image(str(img_path), use_column_width=True)

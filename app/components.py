@@ -29,13 +29,13 @@ def plot_raw_signal(trial: np.ndarray, color: str = "#2c3e50", title: str = "Raw
     time = np.arange(len(sig)) / 100.0
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=time, y=sig, mode="lines", line=dict(color=color, width=1.6)))
-    fig.update_layout(title=title, xaxis_title="Time (s)", yaxis_title="Amplitude (µV)", template="plotly_white", height=300)
+    fig.update_layout(title=title, xaxis_title="Time (s)", yaxis_title="Amplitude (µV)", template="plotly_dark", height=300)
     return fig
 
 
 def plot_confusion_matrix(cm: np.ndarray, class_names: list[str], color: str = "#2ecc71") -> go.Figure:
     fig = go.Figure(data=go.Heatmap(z=cm, x=class_names, y=class_names, colorscale=[[0, "#f8f9fa"], [1, color]], text=cm, texttemplate="%{text}", textfont={"size": 16}))
-    fig.update_layout(template="plotly_white", height=350, xaxis_title="Predicted", yaxis_title="Actual")
+    fig.update_layout(template="plotly_dark", height=350, xaxis_title="Predicted", yaxis_title="Actual")
     return fig
 
 
@@ -44,7 +44,7 @@ def plot_kappa_trajectory(kappa: np.ndarray, color: str = "#2ecc71") -> go.Figur
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=time, y=kappa, mode="lines", line=dict(color=color, width=3)))
     fig.add_hline(y=0.5, line_dash="dash", line_color="gray")
-    fig.update_layout(template="plotly_white", xaxis_title="Time (s)", yaxis_title="Kappa", height=300)
+    fig.update_layout(template="plotly_dark", xaxis_title="Time (s)", yaxis_title="Kappa", height=300)
     return fig
 
 
@@ -57,7 +57,7 @@ def plot_ratio_curve(anchors: dict[str, list[float]], selected_phase: int, all_p
         y_vals = np.asarray(phase["ratio_anchors"]["y"], dtype=float)
         acc = np.interp(ratios, x_vals, y_vals)
         fig.add_trace(go.Scatter(x=ratios, y=acc, mode="lines", name=phase["name"], line=dict(color=phase["color"], width=4 if phase_num == selected_phase else 2), opacity=1.0 if phase_num == selected_phase else 0.55))
-    fig.update_layout(template="plotly_white", height=350, xaxis_title="% Real Data in Training", yaxis_title="Accuracy")
+    fig.update_layout(template="plotly_dark", height=350, xaxis_title="% Real Data in Training", yaxis_title="Accuracy")
     return fig
 
 
@@ -69,7 +69,7 @@ def plot_psd_comparison(real_trial: np.ndarray, fake_trial: np.ndarray, color: s
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=freqs_r, y=psd_r, mode="lines", name="Real", line=dict(color=color, width=2)))
     fig.add_trace(go.Scatter(x=freqs_f, y=psd_f, mode="lines", name="Synthetic", line=dict(color="#7f8c8d", width=2, dash="dash")))
-    fig.update_layout(template="plotly_white", xaxis_title="Frequency (Hz)", yaxis_title="PSD", height=250)
+    fig.update_layout(template="plotly_dark", xaxis_title="Frequency (Hz)", yaxis_title="PSD", height=250)
     return fig
 
 
@@ -105,7 +105,7 @@ def plot_multichannel_stack(trial: np.ndarray, meta: dict, title: str = "") -> g
         fig.update_yaxes(title_text=ch, title_font=dict(size=10), showticklabels=False, row=row, col=1)
 
     fig.update_xaxes(title_text="Time (s)", row=n_ch, col=1)
-    fig.update_layout(template="plotly_white", height=90 * n_ch + 60, title=title, margin=dict(t=40 if title else 20, b=30))
+    fig.update_layout(template="plotly_dark", height=90 * n_ch + 60, title=title, margin=dict(t=40 if title else 20, b=30))
     return fig
 
 
@@ -143,7 +143,7 @@ def plot_annotated_hero_channel(trial: np.ndarray, meta: dict) -> go.Figure:
     fig.add_annotation(x=(m0 + m1) / 2 / fs, y=1.0, yref="paper", yanchor="bottom", showarrow=False, text="Motor Imagery", font=dict(size=10, color="#c0392b"))
     fig.add_annotation(x=(r0 + r1) / 2 / fs, y=1.0, yref="paper", yanchor="bottom", showarrow=False, text="Rebound", font=dict(size=10, color="#1e8449"))
 
-    fig.update_layout(template="plotly_white", height=340, title=f"Channel {hero} — {meta['class_name']} imagery", xaxis_title="Time (s)", yaxis_title="Amplitude (µV)", margin=dict(t=60))
+    fig.update_layout(template="plotly_dark", height=340, title=f"Channel {hero} — {meta['class_name']} imagery", xaxis_title="Time (s)", yaxis_title="Amplitude (µV)", margin=dict(t=60))
     return fig
 
 
@@ -240,7 +240,7 @@ def render_real_vs_fake(phase_data: dict, phase_num: int) -> None:
         st.caption("**Plot A**")
         fig_a = go.Figure()
         fig_a.add_trace(go.Scatter(x=time, y=sig_a, mode="lines", line=dict(color=phase_data["color"])))
-        fig_a.update_layout(template="plotly_white", height=180, margin=dict(t=20, b=10), showlegend=False)
+        fig_a.update_layout(template="plotly_dark", height=180, margin=dict(t=20, b=10), showlegend=False)
         fig_a.update_xaxes(visible=False)
         fig_a.update_yaxes(visible=False)
         st.plotly_chart(fig_a, width="stretch")
@@ -248,7 +248,7 @@ def render_real_vs_fake(phase_data: dict, phase_num: int) -> None:
         st.caption("**Plot B**")
         fig_b = go.Figure()
         fig_b.add_trace(go.Scatter(x=time, y=sig_b, mode="lines", line=dict(color="#6c757d")))
-        fig_b.update_layout(template="plotly_white", height=180, margin=dict(t=20, b=10), showlegend=False)
+        fig_b.update_layout(template="plotly_dark", height=180, margin=dict(t=20, b=10), showlegend=False)
         fig_b.update_xaxes(visible=False)
         fig_b.update_yaxes(visible=False)
         st.plotly_chart(fig_b, width="stretch")
@@ -378,7 +378,7 @@ def render_live_preprocessing(phase_data: dict, color: str, phase_num: int) -> N
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=time, y=demo_sig, mode="lines", name="Raw (center)", line=dict(color="lightgray", width=1.2, dash="dot")))
         fig.add_trace(go.Scatter(x=time, y=cur_signal, mode="lines", name="Processed", line=dict(color=color, width=3)))
-        fig.update_layout(template="plotly_white", height=520, title="Centered Raw Signal — Apply steps in the local panel", xaxis_title="Time (s)", yaxis_title="Amplitude (µV)")
+        fig.update_layout(template="plotly_dark", height=520, title="Centered Raw Signal — Apply steps in the local panel", xaxis_title="Time (s)", yaxis_title="Amplitude (µV)")
         st.plotly_chart(fig, width="stretch")
 
     st.markdown("### Transformation history")
@@ -520,5 +520,5 @@ def render_classifiers(phase_data: dict, phase_num: int) -> None:
             textposition="outside",
         )
     )
-    fig.update_layout(template="plotly_white", height=320, margin=dict(l=20, r=20, t=20, b=20), xaxis_title="Accuracy (%)")
+    fig.update_layout(template="plotly_dark", height=320, margin=dict(l=20, r=20, t=20, b=20), xaxis_title="Accuracy (%)")
     st.plotly_chart(fig, width="stretch")
