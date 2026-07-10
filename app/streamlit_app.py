@@ -46,6 +46,153 @@ def main() -> None:
     st.markdown(
         """
         <style>
+            .stApp {
+                background:
+                    radial-gradient(circle at 16% 10%, rgba(0, 229, 255, 0.14) 0%, rgba(0, 229, 255, 0.00) 28%),
+                    radial-gradient(circle at 84% 16%, rgba(33, 150, 243, 0.11) 0%, rgba(33, 150, 243, 0.00) 26%),
+                    radial-gradient(circle at 33% 82%, rgba(62, 39, 193, 0.10) 0%, rgba(62, 39, 193, 0.00) 30%),
+                    linear-gradient(135deg, #000000 0%, #050505 20%, #0a0e14 50%, #020202 100%);
+                background-attachment: fixed;
+            }
+
+            .stApp:before {
+                content: "";
+                position: fixed;
+                inset: 0;
+                pointer-events: none;
+                background:
+                    linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0 12%, transparent 12% 48%, rgba(255, 255, 255, 0.02) 48% 53%, transparent 53% 100%),
+                    linear-gradient(315deg, rgba(0, 0, 0, 0.42) 0 18%, transparent 18% 42%, rgba(255, 255, 255, 0.02) 42% 46%, transparent 46% 100%);
+                opacity: 1;
+                z-index: 0;
+            }
+
+            section[data-testid="stSidebar"] {
+                background: transparent;
+            }
+
+            section[data-testid="stSidebar"] > div {
+                background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 24px;
+                margin: 1rem 0.8rem 1rem 1rem;
+                box-shadow: 0 28px 72px rgba(0, 0, 0, 0.45);
+                overflow: hidden;
+            }
+
+            section[data-testid="stSidebar"] [data-testid="stSidebarContent"] {
+                padding-top: 1.25rem;
+                overflow: hidden;
+            }
+
+            section[data-testid="stSidebar"] .sidebar-title {
+                color: rgba(255, 255, 255, 0.96);
+                font-size: 1.55rem;
+                font-weight: 800;
+                letter-spacing: 0.02em;
+                margin: 0.25rem 0 1rem;
+                padding: 0 1rem;
+            }
+
+            section[data-testid="stSidebar"] .sidebar-subtitle {
+                color: rgba(255, 255, 255, 0.68);
+                font-size: 0.92rem;
+                padding: 0 1rem 0.75rem;
+                margin-bottom: 0.25rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            }
+
+            section[data-testid="stSidebar"] .sidebar-menu-label {
+                color: rgba(255, 255, 255, 0.9);
+                font-size: 0.82rem;
+                font-weight: 700;
+                letter-spacing: 0.18em;
+                text-transform: uppercase;
+                padding: 0.9rem 1rem 0.35rem;
+            }
+
+            section[data-testid="stSidebar"] button {
+                background: rgba(255, 255, 255, 0.08) !important;
+                border: 1px solid rgba(255, 255, 255, 0.12) !important;
+                border-radius: 16px !important;
+                color: rgba(255, 255, 255, 0.93) !important;
+                width: 100% !important;
+                justify-content: flex-start !important;
+                gap: 0.42rem !important;
+                padding: 0.62rem 0.95rem !important;
+                margin: 0.12rem 0 !important;
+                box-shadow: none !important;
+                transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+                text-align: left !important;
+            }
+
+            section[data-testid="stSidebar"] button:hover {
+                transform: translateX(2px);
+                background: rgba(255, 255, 255, 0.14) !important;
+                border-color: rgba(255, 255, 255, 0.24) !important;
+            }
+
+            section[data-testid="stSidebar"] button[kind="primary"] {
+                background: rgba(255, 255, 255, 0.18) !important;
+                border-color: rgba(255, 255, 255, 0.32) !important;
+                box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 8px 24px rgba(0, 0, 0, 0.18) !important;
+            }
+
+            div[data-testid="stSelectbox"] {
+                background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.05) 100%);
+                border: 1px solid rgba(255, 255, 255, 0.12);
+                border-radius: 18px;
+                padding: 0.35rem 0.45rem 0.45rem;
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+                box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+                transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+            }
+
+            div[data-testid="stSelectbox"]:hover {
+                transform: translateY(-2px);
+                background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.07) 100%);
+                border-color: rgba(255, 255, 255, 0.22);
+                box-shadow: 0 22px 44px rgba(0, 0, 0, 0.34);
+            }
+
+            div[data-testid="stSelectbox"] div[data-baseweb="select"] > div {
+                background: transparent;
+                border: 0;
+                box-shadow: none;
+                color: rgba(255, 255, 255, 0.94);
+            }
+
+            div[data-testid="stSelectbox"] svg {
+                fill: rgba(255, 255, 255, 0.82);
+            }
+
+            div[data-testid="stSelectbox"] div[data-baseweb="popover"] {
+                background: rgba(6, 8, 12, 0.98);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            section[data-testid="stSidebar"] button span {
+                color: inherit !important;
+                font-weight: 600;
+            }
+
+            section[data-testid="stSidebar"] button > div {
+                justify-content: flex-start !important;
+            }
+
+            section[data-testid="stSidebar"] button [data-testid="stMarkdownContainer"] {
+                text-align: left !important;
+            }
+
+            .block-container {
+                position: relative;
+                z-index: 1;
+                background: transparent;
+            }
+
             .phase-selector { margin-bottom: 20px; }
             .phase-selector label { font-weight: 600; font-size: 1.1rem; }
             .phase-highlight { border-left: 6px solid var(--accent); padding-left: 15px; }
@@ -62,7 +209,7 @@ def main() -> None:
         st.title("🧠 BCI Augmentation Pipeline")
         st.caption("Interactive walkthrough of preprocessing, GAN architecture, and classification.")
     with col_selector:
-        st.markdown("**Live Evolution View**")
+        st.markdown("<div class='sidebar-menu-label' style='padding-left: 0; padding-top: 0;'>Live Evolution View</div>", unsafe_allow_html=True)
         phase_num = st.selectbox(
             "Select Phase",
             options=[1, 2, 3],
@@ -83,23 +230,49 @@ def main() -> None:
         </style>
         """, unsafe_allow_html=True)
 
-    tabs = st.tabs(["📊 Raw Input", "🔬 Live Preprocessing", "🧠 Architecture", "📈 Augmentation", "🧾 Classifiers", "🎯 Results", "🎮 Real vs Fake"])
+    nav_items = [
+        ("Raw Input", "home", "home"),
+        ("Live Preprocessing", "tune", "preprocess"),
+        ("Architecture", "schema", "architecture"),
+        ("Augmentation", "dataset", "augmentation"),
+        ("Classifiers", "psychology", "classifiers"),
+        ("Results", "analytics", "results"),
+        ("Real vs Fake", "compare_arrows", "challenge"),
+    ]
 
-    with tabs[0]:
+    if "main_nav" not in st.session_state:
+        st.session_state["main_nav"] = nav_items[0][0]
+
+    st.sidebar.markdown('<div class="sidebar-title">BCI</div>', unsafe_allow_html=True)
+    st.sidebar.markdown('<div class="sidebar-subtitle">Augmentation Pipeline</div>', unsafe_allow_html=True)
+    st.sidebar.markdown('<div class="sidebar-menu-label">Menu</div>', unsafe_allow_html=True)
+
+    for label, icon_name, item_key in nav_items:
+        is_selected = st.session_state["main_nav"] == label
+        if st.sidebar.button(
+            label,
+            icon=f":material/{icon_name}:",
+            key=f"nav_{item_key}",
+            use_container_width=True,
+            type="primary" if is_selected else "secondary",
+        ):
+            st.session_state["main_nav"] = label
+
+    selected_tab = st.session_state["main_nav"]
+
+    if selected_tab == "Raw Input":
         render_biomarker_guide(color)
-
-    with tabs[1]:
+    elif selected_tab == "Live Preprocessing":
         st.header("🔬 Live Preprocessing Pipeline")
-        st.markdown("Toggle filters, drag sliders, and watch the EEG waveform transform in real time. The gray trace is the raw signal; the colored trace is your processed output.")
-        render_live_preprocessing(phase_data, color)
+        st.markdown("Tune filters and watch the EEG waveform transform in real time. The gray trace is the raw signal; the colored trace is your processed output.")
+        render_live_preprocessing(phase_data, color, phase_num)
         with st.expander("⚡ How does this work?"):
             st.markdown("- Bandpass keeps the motor-imagery frequencies of interest.\n- Notch removes power-line hum.\n- Common-average re-referencing suppresses shared noise.\n- Baseline correction zeros the pre-cue period.\n- ICA (mock) simulates removing blink and jaw-clench artifacts.")
-
-    with tabs[2]:
+    elif selected_tab == "Architecture":
         st.header("GAN Architecture")
         st.markdown("Display the proposed architecture image. The page intentionally shows only the image to keep the architecture focused and large.")
 
-        assets_dir = ROOT/"assets"
+        assets_dir = ROOT / "assets"
         img_path = Path("/Users/shriram/Desktop/architecture.png")
 
         if img_path.exists():
@@ -109,7 +282,6 @@ def main() -> None:
             st.info("Drop the provided architecture image into the repository at `assets/architecture.png`, or upload it below to preview and save it.")
             uploaded = st.file_uploader("Upload architecture image", type=["png", "jpg", "jpeg"])
             if uploaded is not None:
-                # show immediately
                 st.image(uploaded, use_column_width=True)
                 try:
                     assets_dir.mkdir(parents=True, exist_ok=True)
@@ -119,67 +291,61 @@ def main() -> None:
                     st.success(f"Saved image to {save_path}")
                 except Exception as e:
                     st.error(f"Could not save image to disk: {e}")
+    elif selected_tab == "Augmentation":
+        st.header("Augmentation & Classifier Training")
+        st.markdown("Synthetic data boosts classifier performance, especially when real data is scarce.")
 
-        with tabs[3]:
-            st.header("Augmentation & Classifier Training")
-            st.markdown("Synthetic data boosts classifier performance, especially when real data is scarce.")
-
-            # Replace top accuracy plot with a centered placeholder + generate button
-            gen_key = f"aug_generated_{phase_num}"
-            placeholder = st.container()
-            with placeholder:
-                st.markdown("---")
-                c1, c2, c3 = st.columns([1, 2, 1])
-                with c1:
-                    st.write("")
-                with c2:
-                    st.markdown("### Generate class-wise example signals")
-                    if st.button("Generate signals", key=f"gen_btn_{phase_num}") or (gen_key in st.session_state and st.session_state.get(gen_key) is None):
-                        # simulate staggered loading and generate examples per class
-                        st.session_state[gen_key] = None
-                        progress = st.progress(0)
-                        messages = st.empty()
-                        classes = phase_data.get("class_names", ["Right Hand", "Left Hand", "Foot"])[:3]
-                        generated = {}
-                        total_steps = len(classes) * 3
-                        step = 0
-                        for cls in classes:
-                            messages.text(f"Generating examples for {cls} ...")
-                            # uneven delay per class
-                            for i in range(3):
-                                time.sleep(0.6 + random.random() * 0.6)
-                                step += 1
-                                progress.progress(int(step / total_steps * 100))
-                            # generate one realistic-style and one phase-specific synthetic
-                            real_t, _ = generate_real_trial(cls, n_samples=550, seed=random.randint(0, 10000))
-                            fake_t, _ = generate_fake_trial(cls, phase_num, n_samples=550, seed=random.randint(0, 10000))
-                            generated[cls] = {"real": real_t, "fake": fake_t}
-                        messages.text("Finalizing...")
-                        time.sleep(0.6)
-                        progress.progress(100)
-                        st.session_state[gen_key] = generated
-                        messages.empty()
-                with c3:
-                    st.write("")
-
+        gen_key = f"aug_generated_{phase_num}"
+        placeholder = st.container()
+        with placeholder:
             st.markdown("---")
+            c1, c2, c3 = st.columns([1, 2, 1])
+            with c1:
+                st.write("")
+            with c2:
+                st.markdown("### Generate class-wise example signals")
+                if st.button("Generate signals", key=f"gen_btn_{phase_num}") or (gen_key in st.session_state and st.session_state.get(gen_key) is None):
+                    st.session_state[gen_key] = None
+                    progress = st.progress(0)
+                    messages = st.empty()
+                    classes = phase_data.get("class_names", ["Right Hand", "Left Hand", "Foot"])[:3]
+                    generated = {}
+                    total_steps = len(classes) * 3
+                    step = 0
+                    for cls in classes:
+                        messages.text(f"Generating examples for {cls} ...")
+                        for _ in range(3):
+                            time.sleep(0.6 + random.random() * 0.6)
+                            step += 1
+                            progress.progress(int(step / total_steps * 100))
+                        real_t, _ = generate_real_trial(cls, n_samples=550, seed=random.randint(0, 10000))
+                        fake_t, _ = generate_fake_trial(cls, phase_num, n_samples=550, seed=random.randint(0, 10000))
+                        generated[cls] = {"real": real_t, "fake": fake_t}
+                    messages.text("Finalizing...")
+                    time.sleep(0.6)
+                    progress.progress(100)
+                    st.session_state[gen_key] = generated
+                    messages.empty()
+            with c3:
+                st.write("")
 
-            # Show generated gallery if available
-            if gen_key in st.session_state and st.session_state.get(gen_key):
-                gallery = st.session_state[gen_key]
-                st.subheader("Generated Examples (labeled for demo)")
-                for cls, pair in gallery.items():
-                    st.markdown(f"**{cls}**")
-                    col_r, col_f = st.columns(2)
-                    with col_r:
-                        st.caption("Real-like (generated)")
-                        st.plotly_chart(plot_raw_signal(pair["real"], color, ""), width="stretch")
-                    with col_f:
-                        st.caption(f"Synthetic (Phase {phase_num})")
-                        st.plotly_chart(plot_raw_signal(pair["fake"], "#7f8c8d", ""), width="stretch")
-                st.markdown("---")
-                st.markdown("_Short explanation:_ These examples are generated from the physiology-based synthesizer. "
-                            "The left column shows realistic-style trials from the same generator; the right column shows phase-specific synthetic signals. Use these to evaluate augmentation impact and inspect waveform/biomarker differences.")
+        st.markdown("---")
+
+        if gen_key in st.session_state and st.session_state.get(gen_key):
+            gallery = st.session_state[gen_key]
+            st.subheader("Generated Examples (labeled for demo)")
+            for cls, pair in gallery.items():
+                st.markdown(f"**{cls}**")
+                col_r, col_f = st.columns(2)
+                with col_r:
+                    st.caption("Real-like (generated)")
+                    st.plotly_chart(plot_raw_signal(pair["real"], color, ""), width="stretch")
+                with col_f:
+                    st.caption(f"Synthetic (Phase {phase_num})")
+                    st.plotly_chart(plot_raw_signal(pair["fake"], "#7f8c8d", ""), width="stretch")
+            st.markdown("---")
+            st.markdown("_Short explanation:_ These examples are generated from the physiology-based synthesizer. The left column shows realistic-style trials from the same generator; the right column shows phase-specific synthetic signals. Use these to evaluate augmentation impact and inspect waveform/biomarker differences.")
+
         ratio = st.slider("Real vs Synthetic Training Ratio (% Real)", 0, 100, 50, key=f"ratio_{phase_num}")
         acc_at_ratio = np.interp(ratio, phase_data["ratio_anchors"]["x"], phase_data["ratio_anchors"]["y"])
         st.metric(f"Estimated Accuracy at {ratio}% Real", f"{acc_at_ratio * 100:.1f}%")
@@ -196,11 +362,9 @@ def main() -> None:
         with col_psd:
             st.caption("**PSD Comparison**")
             st.plotly_chart(plot_psd_comparison(phase_data["real"][sample_idx], phase_data["fake"][sample_idx], color), width="stretch")
-
-    with tabs[4]:
+    elif selected_tab == "Classifiers":
         render_classifiers(phase_data, phase_num)
-
-    with tabs[5]:
+    elif selected_tab == "Results":
         st.header("Final Classification Performance")
         col1, col2, col3 = st.columns(3)
         col1.metric("Accuracy", f"{metrics['accuracy'] * 100:.1f}%", delta=f"+{(metrics['accuracy'] - 0.463) * 100:.1f}%" if phase_num > 1 else None)
@@ -221,8 +385,7 @@ def main() -> None:
         fig_loso = go.Figure(data=go.Heatmap(z=loso_data, x=["S1", "S2", "S3", "S4", "S5"], y=["S1", "S2", "S3", "S4", "S5"], colorscale="RdBu", zmin=0.3, zmax=0.9, text=loso_data.round(2), texttemplate="%{text}", textfont={"size": 14}))
         fig_loso.update_layout(template="plotly_white", height=400, xaxis_title="Test Subject", yaxis_title="Train Subject")
         st.plotly_chart(fig_loso, width="stretch")
-
-    with tabs[6]:
+    else:
         st.header("🎮 Signal Realism Challenge")
         st.markdown("Try to tell which signal looks more realistic for this phase's GAN quality, using the same physiology-driven synthesis style as the first tab.")
         render_real_vs_fake(phase_data, phase_num)

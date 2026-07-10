@@ -302,54 +302,89 @@ def render_real_vs_fake(phase_data: dict, phase_num: int) -> None:
             st.info("Phase 3: very realistic; subtle spectral/timing cues remain the differentiator.")
 
 
-def render_live_preprocessing(phase_data: dict, color: str) -> None:
-    # New layout: large centered raw signal generated from eeg_synthesis, with sidebar controls
+def render_live_preprocessing(phase_data: dict, color: str, phase_num: int) -> None:
     st.markdown("### 🎛️ Preprocessing — Live Preview")
-    # generate one demo trial from the synthesizer so the user always sees a clean example
-    seed = st.sidebar.number_input("Seed", min_value=0, max_value=1_000_000, value=42, step=1, key="preproc_seed")
-    class_opt = st.sidebar.selectbox("Class", phase_data.get("class_names", ["Right Hand", "Left Hand", "Foot"])[:3], index=0, key="preproc_class")
+
+    control_col, display_col = st.columns([1, 2])
+    state_key = f"preproc_state_{phase_num}"
+    class_options = phase_data.get("class_names", ["Right Hand", "Left Hand", "Foot"])[:3]
+
+    if state_key not in st.session_state:
+        st.session_state[state_key] = {
+            "seed": 42,
+            "class_name": class_options[0],
+            "history": [],
+            "signature": None,
+        }
+
+    with control_col:
+        st.markdown("#### Controls")
+        seed = st.number_input(
+            "Seed",
+            min_value=0,
+            max_value=1_000_000,
+            value=int(st.session_state[state_key]["seed"]),
+            step=1,
+            key=f"preproc_seed_{phase_num}",
+        )
+        class_opt = st.selectbox(
+            "Class",
+            class_options,
+            index=class_options.index(st.session_state[state_key]["class_name"]) if st.session_state[state_key]["class_name"] in class_options else 0,
+            key=f"preproc_class_{phase_num}",
+        )
+
     demo_trial, demo_meta = generate_real_trial(class_opt, n_samples=550, seed=int(seed))
     demo_sig = demo_trial.mean(axis=1) if demo_trial.ndim == 2 else get_signal(demo_trial)
+    signature = (int(seed), class_opt)
 
-    # Sidebar controls for preprocessing steps (one-click action buttons)
-    st.sidebar.markdown("---")
-    st.sidebar.markdown("### Preprocessing Actions")
-    if "preproc_history" not in st.session_state:
-        st.session_state["preproc_history"] = [{"label": "raw", "signal": demo_sig}]
+    if st.session_state[state_key]["signature"] != signature:
+        st.session_state[state_key]["signature"] = signature
+        st.session_state[state_key]["seed"] = int(seed)
+        st.session_state[state_key]["class_name"] = class_opt
+        st.session_state[state_key]["history"] = [{"label": "raw", "signal": demo_sig}]
+    elif not st.session_state[state_key]["history"]:
+        st.session_state[state_key]["history"] = [{"label": "raw", "signal": demo_sig}]
 
-    if st.sidebar.button("Apply Bandpass"):
-        cur = st.session_state["preproc_history"][-1]["signal"]
-        proc = apply_bandpass(cur, demo_meta.get("fs", 100.0), 0.5, 30.0)
-        st.session_state["preproc_history"].append({"label": "bandpass", "signal": proc})
-    if st.sidebar.button("Apply Notch"):
-        cur = st.session_state["preproc_history"][-1]["signal"]
-        proc = apply_notch(cur, demo_meta.get("fs", 100.0), 50)
-        st.session_state["preproc_history"].append({"label": "notch", "signal": proc})
-    if st.sidebar.button("Apply CAR"):
-        # for demo, re-generate as mean across channels -> simulate CAR
-        cur = st.session_state["preproc_history"][-1]["signal"]
-        st.session_state["preproc_history"].append({"label": "car", "signal": cur})
-    if st.sidebar.button("Baseline Correct"):
-        cur = st.session_state["preproc_history"][-1]["signal"]
-        proc = apply_baseline_correction(cur, 20)
-        st.session_state["preproc_history"].append({"label": "baseline", "signal": proc})
-    if st.sidebar.button("Undo Last Step"):
-        if len(st.session_state["preproc_history"]) > 1:
-            st.session_state["preproc_history"].pop()
+    with control_col:
+        st.markdown("#### Actions")
+        action_row_1 = st.columns(2)
+        action_row_2 = st.columns(2)
 
-    # show central large signal
-    cur_signal = st.session_state["preproc_history"][-1]["signal"]
+        if action_row_1[0].button("Apply Bandpass", key=f"bandpass_{phase_num}"):
+            cur = st.session_state[state_key]["history"][-1]["signal"]
+            proc = apply_bandpass(cur, demo_meta.get("fs", 100.0), 0.5, 30.0)
+            st.session_state[state_key]["history"].append({"label": "bandpass", "signal": proc})
+        if action_row_1[1].button("Apply Notch", key=f"notch_{phase_num}"):
+            cur = st.session_state[state_key]["history"][-1]["signal"]
+            proc = apply_notch(cur, demo_meta.get("fs", 100.0), 50)
+            st.session_state[state_key]["history"].append({"label": "notch", "signal": proc})
+        if action_row_2[0].button("Apply CAR", key=f"car_{phase_num}"):
+            cur = st.session_state[state_key]["history"][-1]["signal"]
+            st.session_state[state_key]["history"].append({"label": "car", "signal": cur})
+        if action_row_2[1].button("Baseline Correct", key=f"baseline_{phase_num}"):
+            cur = st.session_state[state_key]["history"][-1]["signal"]
+            proc = apply_baseline_correction(cur, 20)
+            st.session_state[state_key]["history"].append({"label": "baseline", "signal": proc})
+
+        if st.button("Undo Last Step", key=f"undo_{phase_num}"):
+            if len(st.session_state[state_key]["history"]) > 1:
+                st.session_state[state_key]["history"].pop()
+
+    cur_signal = st.session_state[state_key]["history"][-1]["signal"]
     time = np.arange(len(cur_signal)) / demo_meta.get("fs", 100.0)
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=time, y=demo_sig, mode="lines", name="Raw (center)", line=dict(color="lightgray", width=1.2, dash="dot")))
-    fig.add_trace(go.Scatter(x=time, y=cur_signal, mode="lines", name="Processed", line=dict(color=color, width=3)))
-    fig.update_layout(template="plotly_white", height=520, title="Centered Raw Signal — Apply steps from sidebar", xaxis_title="Time (s)", yaxis_title="Amplitude (µV)")
-    st.plotly_chart(fig, width="stretch")
 
-    # transformation timeline thumbnails
+    with display_col:
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=time, y=demo_sig, mode="lines", name="Raw (center)", line=dict(color="lightgray", width=1.2, dash="dot")))
+        fig.add_trace(go.Scatter(x=time, y=cur_signal, mode="lines", name="Processed", line=dict(color=color, width=3)))
+        fig.update_layout(template="plotly_white", height=520, title="Centered Raw Signal — Apply steps in the local panel", xaxis_title="Time (s)", yaxis_title="Amplitude (µV)")
+        st.plotly_chart(fig, width="stretch")
+
     st.markdown("### Transformation history")
-    cols = st.columns(min(4, len(st.session_state["preproc_history"])))
-    for i, h in enumerate(st.session_state["preproc_history"][-4:]):
+    history = st.session_state[state_key]["history"][-4:]
+    cols = st.columns(max(1, len(history)))
+    for i, h in enumerate(history):
         with cols[i]:
             st.markdown(f"**{h['label']}**")
             st.line_chart(h["signal"], height=120)
