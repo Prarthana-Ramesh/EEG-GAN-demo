@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
+import time
 from scipy import signal
 
 ROOT = Path(__file__).resolve().parent
@@ -146,7 +147,7 @@ def main() -> None:
                             messages.text(f"Generating examples for {cls} ...")
                             # uneven delay per class
                             for i in range(3):
-                                st.time.sleep(0.6 + random.random() * 0.6)
+                                time.sleep(0.6 + random.random() * 0.6)
                                 step += 1
                                 progress.progress(int(step / total_steps * 100))
                             # generate one realistic-style and one phase-specific synthetic
@@ -154,7 +155,7 @@ def main() -> None:
                             fake_t, _ = generate_fake_trial(cls, phase_num, n_samples=550, seed=random.randint(0, 10000))
                             generated[cls] = {"real": real_t, "fake": fake_t}
                         messages.text("Finalizing...")
-                        st.time.sleep(0.6)
+                        time.sleep(0.6)
                         progress.progress(100)
                         st.session_state[gen_key] = generated
                         messages.empty()
